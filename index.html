@@ -48,18 +48,71 @@
 				</section>
 
 				<section>
-					<h2><em>reduce</em> all the things</h2>
+					<h2>instead of <em>!enum.all?</em> use <em>enum.none?</em></h2>
+					<pre><code data-trim class="js">
+[ 1, 2, 3, 4, ].none? { |i| i > 5 }
+=> true
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>use <em>partition</em> to divide your collection</h2>
+					<pre><code data-trim class="js">
+js, others = [ 'Josh', 'Jeb', 'Terry', 'Andy' ].partition do |n|
+  n.start_with?('J')
+end
+=> js = ["Josh", "Jeb"]
+=> others = ["Terry", "Andy"]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>you can <em>reduce</em></h2>
+					<pre><code data-trim class="js">
+['Josh', 'Jeb', 'Terry', 'Andy', 'John'].reduce({}) do |index,name|
+  index[name[0]] ||= []
+  index[name[0]] << name
+  index
+end
+=> {"J"=>["Josh", "Jeb", "John"], "T"=>["Terry"], "A"=>["Andy"]}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>but you can also <em>each_with_object</em></h2>
+					<pre><code data-trim class="js">
+['Josh', 'Jeb', 'Terry', 'Andy', 'John'].each_with_object({}) do
+  |name,index|
+    index[name[0]] ||= []
+    index[name[0]] << name
+end
+=> {"J"=>["Josh", "Jeb", "John"], "T"=>["Terry"], "A"=>["Andy"]}
+					</code></pre>
 					<p>
-						Goal: combines elements using a binary operation producing another object.
+						Same result as <em>reduce</em> but order of parameters is different.
 					</p>
 				</section>
 
 				<section>
-					<h2>simply combine stuff</h2>
-<pre><code data-trim class="js">
-[ 1, 2, 3, 4, ].reduce(:+)
-=> 10
-</code></pre>
+					<h2>use parens when reducing a hash</h2>
+					<pre><code data-trim class="js">
+{a: [1, 4, 9], b: [2, 7, 15], c: [3, 6, 9]}.reduce({}) do
+  |averages, (name,values) |
+    averages[name] = values.reduce(:+)/values.size
+    averages
+end
+=> {:a=>4, :b=>8, :c=>6}
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>use <em>flat_map</em> instead of <em>map.flatten</em></h2>
+					<pre><code data-trim class="js">
+[ [1,2,3], [5, 7, 9], [11, 12] ].flat_map do |items|
+  items.find_all(&:even?) # expands to { |n| n.even? }
+end
+=> [2, 12]
+					</code></pre>
 				</section>
 
 			</div>
