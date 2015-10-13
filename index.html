@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Enumerable Love</title>
+		<title>Enumerable and Array Love</title>
 
 		<meta name="description" content="Enumerables have a lot of interesting methods you can use">
 		<meta name="author" content="Maurício Linhares">
@@ -40,7 +40,7 @@
 
 			<div class="slides">
 				<section>
-					<h1>Enumerables</h1>
+					<h1>Enumerables and Arrays</h1>
 					<h3>There's MOAR stuff there, really</h3>
 					<p>
 						<small> <a href="http://mauricio.github.io/">Maurício Linhares</a> / <a href="http://twitter.com/mauriciojr">@mauriciojr</a></small>
@@ -49,7 +49,7 @@
 
 				<section>
 					<h2>instead of <em>!enum.all?</em> use <em>enum.none?</em></h2>
-					<pre><code data-trim class="js">
+					<pre><code data-trim class="ruby">
 [ 1, 2, 3, 4, ].none? { |i| i > 5 }
 => true
 					</code></pre>
@@ -57,7 +57,7 @@
 
 				<section>
 					<h2>use <em>partition</em> to divide your collection</h2>
-					<pre><code data-trim class="js">
+					<pre><code data-trim class="ruby">
 js, others = [ 'Josh', 'Jeb', 'Terry', 'Andy' ].partition do |n|
   n.start_with?('J')
 end
@@ -68,7 +68,7 @@ end
 
 				<section>
 					<h2>you can <em>reduce</em></h2>
-					<pre><code data-trim class="js">
+					<pre><code data-trim class="ruby">
 ['Josh', 'Jeb', 'Terry', 'Andy', 'John'].reduce({}) do |index,name|
   index[name[0]] ||= []
   index[name[0]] << name
@@ -80,7 +80,7 @@ end
 
 				<section>
 					<h2>but you can also <em>each_with_object</em></h2>
-					<pre><code data-trim class="js">
+					<pre><code data-trim class="ruby">
 ['Josh', 'Jeb', 'Terry', 'Andy', 'John'].each_with_object({}) do
   |name,index|
     index[name[0]] ||= []
@@ -95,7 +95,7 @@ end
 
 				<section>
 					<h2>use parens when reducing a hash</h2>
-					<pre><code data-trim class="js">
+					<pre><code data-trim class="ruby">
 {a: [1, 4, 9], b: [2, 7, 15], c: [3, 6, 9]}.reduce({}) do
   |averages, (name,values) |
     averages[name] = values.reduce(:+)/values.size
@@ -107,13 +107,95 @@ end
 
 				<section>
 					<h2>use <em>flat_map</em> instead of <em>map.flatten</em></h2>
-					<pre><code data-trim class="js">
+					<pre><code data-trim class="ruby">
 [ [1,2,3], [5, 7, 9], [11, 12] ].flat_map do |items|
   items.find_all(&:even?) # expands to { |n| n.even? }
 end
 => [2, 12]
 					</code></pre>
 				</section>
+
+				<section>
+					<h2>clean up your arrays with <em>compact</em></h2>
+					<pre><code data-trim class="ruby">
+[ 1, 2, nil, 6, 7 , nil, 10 ].compact
+=> [1, 2, 6, 7, 10]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>if you have large sorted arrays, <em>bsearch</em> is your friend</h2>
+					<pre><code data-trim class="ruby">
+random = Random.new(255)
+sorted_items =
+  (0..10_000_000).map { Random.rand(1_000_000_000)  }.sort
+
+Benchmark.measure { sorted_items.find { |n| n == 999999864 } }
+=>  0.980000   0.010000   0.990000 (  0.986976)
+
+Benchmark.measure { sorted_items.bsearch { |n| n == 999999864 } }
+=> 0.000000   0.000000   0.000000 (  0.000018)
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>yo dawg, I heard you like combinations</h2>
+					<pre><code data-trim class="ruby">
+['Eagles', 'Phillies', '76ers', 'Flyers'].combination(3)
+=> [
+  ["Eagles", "Phillies", "76ers"],
+  ["Eagles", "Phillies", "Flyers"],
+  ["Eagles", "76ers", "Flyers"],
+  ["Phillies", "76ers", "Flyers"]
+]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>and you can do permutations as well</h2>
+					<pre><code data-trim class="ruby">
+['Eagles', 'Phillies', '76ers', 'Flyers'].permutation(3)
+=> [
+  ["Eagles", "Phillies", "76ers"],
+  ["Eagles", "Phillies", "Flyers"],
+  ["Eagles", "76ers", "Phillies"],
+  ["Eagles", "76ers", "Flyers"]
+  ... and many many more
+]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>randomize your array with <em>shuffle</em></h2>
+					<pre><code data-trim class="ruby">
+(1..10).to_a.shuffle
+=> [9, 6, 8, 4, 7, 1, 5, 2, 10, 3]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>use <em>uniq</em> to remove all duplicates from the array</h2>
+					<pre><code data-trim class="ruby">
+[1, 1, 2, 2, 3, 3, 4, 5, 8, 8].uniq
+=> [1, 2, 3, 4, 5, 8]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>pipe your arrays</h2>
+					<pre><code data-trim class="ruby">
+[1, 2, 3, 4] | [3, 4, 5, 6]
+=> [1, 2, 3, 4, 5, 6]
+					</code></pre>
+				</section>
+
+					<section>
+						<h1>The end</h1>
+						<h3>Thanks!</h3>
+						<p>
+							<small> <a href="http://mauricio.github.io/">Maurício Linhares</a> / <a href="http://twitter.com/mauriciojr">@mauriciojr</a></small>
+						</p>
+					</section>
 
 			</div>
 
