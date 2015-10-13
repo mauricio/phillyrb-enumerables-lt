@@ -116,6 +116,29 @@ end
 				</section>
 
 				<section>
+					<h2>be <em>lazy</em></h2>
+					<p>
+						When working with large or infinite enumerables, you can't materialize
+						them in memory, to do this, you need lazy enumerables.
+					</p>
+				</section>
+
+				<section>
+					<h2>using <em>Prime</em> numbers</h2>
+					<pre><code data-trim class="ruby">
+Prime.lazy.select { |n| n > 100 && n < 200 }.take(10).to_a
+=> [101, 103, 107, 109, 113, 127, 131, 137, 139, 149]
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>All enumerables respond to <em>lazy</em></h2>
+					<p>
+						So whenever you have long operations or sequences of operations that don't need to be performed in all objects right away, use lazy.
+					</p>
+				</section>
+
+				<section>
 					<h2>clean up your arrays with <em>compact</em></h2>
 					<pre><code data-trim class="ruby">
 [ 1, 2, nil, 6, 7 , nil, 10 ].compact
